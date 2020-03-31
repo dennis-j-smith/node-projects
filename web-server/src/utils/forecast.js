@@ -16,8 +16,10 @@ const forecast = (latitude, longitude, callback) => {
         }
         else
         {      
+          console.log(body)
           callback(undefined, {
-              temp: body.daily.data[0].summary + ' It is currently ' + body.currently.temperature + ' degrees out.',
+              temp: 'It is currently ' + body.currently.temperature + ' degrees out. ',
+              wind: 'Current Wind Speed: ' + body.currently.windSpeed + ' ',
               precip: 'There is ' + body.currently.precipProbability + ' % chance of precipitation.',
               summary: 'Summary: ' + body.daily.summary
           })
