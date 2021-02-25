@@ -22,9 +22,15 @@ io.on('connection', (socket) => {
 
         socket.join(user.room)
 
-        socket.emit('message', generateMessage('Welcome to my cool new chat!'))
+        socket.emit('message', generateMessage('Chat-Bot', 'Welcome to my cool new chat!'))
 
-        socket.broadcast.to(user.room).emit('message', generateMessage(`${user.username} has joined the chat.`))
+        socket.broadcast.to(user.room).emit('message', generateMessage('Chat-Bot', `${user.username} has joined the chat.`))
+
+        io.to(user.room).emit('roomData', {
+            room: user.room,
+            users: getUsersInRoom(user.room)
+
+        })
         callback()
     })
 
@@ -36,7 +42,7 @@ io.on('connection', (socket) => {
         if (filter.isProfane(message)) {
             return callback('Profanity is not allowed!')
         }
-        io.to(user.room).emit('message',generateMessage(message));
+        io.to(user.room).emit('message', generateMessage(user.username, message));
         callback()
     })
 
@@ -44,14 +50,19 @@ io.on('connection', (socket) => {
 
         const user = getUser(socket.id)
 
-        io.to(user.room).emit('locationMessage', generateLocationMessage(`http://google.com/maps?q=${location.latitude},${location.longitude}`));
+        io.to(user.room).emit('locationMessage', generateLocationMessage(user.username, `http://google.com/maps?q=${location.latitude},${location.longitude}`));
         callback()
     })
 
     socket.on('disconnect', () => {
         const user = removeUser(socket.id)
         if (user) {
-            io.to(user.room).emit('message', generateMessage(`${user.username} has left the chat!`))
+            io.to(user.room).emit('message', generateMessage('Chat-Bot', `${user.username} has left the chat!`))
+            io.to(user.room).emit('roomData', {
+                room: user.room,
+                users: getUsersInRoom(user.room)
+    
+            })
         }
     })
 })

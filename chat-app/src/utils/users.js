@@ -3,8 +3,7 @@ const { use } = require("../app")
 const users = []
 
 const addUser = ({id, username, room}) => {
-
-    console.log("here")
+  
     username = username.trim().toLowerCase()
     room = room.trim().toLowerCase()
 
@@ -26,7 +25,6 @@ const addUser = ({id, username, room}) => {
     }
     
     const user = { id, username, room }
-    console.log(JSON.stringify(user))
     users.push(user)
     return({user})
 }
@@ -43,14 +41,22 @@ const removeUser = (id) => {
 }
 
 const getUser = (id) => {
-    return users.find((id) => user.id === id)    
+    return users.find((user) => user.id === id)    
 }
 
 const getUsersInRoom = (room) => {
-    return users.filter((user) => {
-        user.room == room
+    room = room.trim().toLowerCase()
+    const rtn = users.filter((user) => {
+        return user.room === room
     })
+
+    return rtn
 }
+
+// const getUsersInRoom = (room) => {
+//     //room = room.trim().toLowerCase()
+//     return users.filter((user) => user.room === room)
+// }
 
 module.exports = {
     addUser,
